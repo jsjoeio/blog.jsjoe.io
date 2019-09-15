@@ -99,7 +99,7 @@ async function persistQuery(queryText) {
       {
         hostname: 'serve.onegraph.com',
         port: 443,
-        path: `/graphql?app_id=${process.env.RAZZLE_ONEGRAPH_APP_ID}`,
+        path: `/graphql?app_id=0b066ba6-ed39-4db8-a497-ba0be34d5b2a`,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
