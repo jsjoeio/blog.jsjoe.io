@@ -1,6 +1,6 @@
 const https = require('https');
 const GraphQLLanguage = require('graphql/language');
-const { parse, print } = require('graphql');
+const {parse, print} = require('graphql');
 
 require('dotenv').config();
 
@@ -30,7 +30,7 @@ const PERSIST_QUERY_MUTATION = `
 `;
 
 async function persistQuery(queryText) {
-  const ast = parse(queryText, { noLocation: true });
+  const ast = parse(queryText, {noLocation: true});
 
   const freeVariables = new Set([]);
   let accessToken;
@@ -56,7 +56,7 @@ async function persistQuery(queryText) {
                 if (accessToken) {
                   throw new Error(
                     'Access token is already defined for operation=' +
-                    node.name.value,
+                      node.name.value,
                   );
                 }
                 const envVar = envArg.value.value;
@@ -64,8 +64,8 @@ async function persistQuery(queryText) {
                 if (!accessToken) {
                   throw new Error(
                     'Cannot persist query. Missing environment variable `' +
-                    envVar +
-                    '`.',
+                      envVar +
+                      '`.',
                   );
                 }
               }
@@ -114,6 +114,11 @@ async function persistQuery(queryText) {
         res.on('end', () => {
           const resp = JSON.parse(data);
           if (resp.errors) {
+            console.log(queryText, 'what is the queryText, when it fails');
+            console.log('here area the variables', {
+              appId: variables.appId,
+              accessToken: variables.accessToken,
+            });
             throw new Error(
               'Error persisting query, errors=' + JSON.stringify(resp.errors),
             );
