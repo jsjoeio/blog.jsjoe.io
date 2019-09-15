@@ -1,6 +1,6 @@
 const https = require('https');
 const GraphQLLanguage = require('graphql/language');
-const {parse, print} = require('graphql');
+const { parse, print } = require('graphql');
 
 require('dotenv').config();
 
@@ -30,7 +30,7 @@ const PERSIST_QUERY_MUTATION = `
 `;
 
 async function persistQuery(queryText) {
-  const ast = parse(queryText, {noLocation: true});
+  const ast = parse(queryText, { noLocation: true });
 
   const freeVariables = new Set([]);
   let accessToken;
@@ -56,7 +56,7 @@ async function persistQuery(queryText) {
                 if (accessToken) {
                   throw new Error(
                     'Access token is already defined for operation=' +
-                      node.name.value,
+                    node.name.value,
                   );
                 }
                 const envVar = envArg.value.value;
@@ -64,8 +64,8 @@ async function persistQuery(queryText) {
                 if (!accessToken) {
                   throw new Error(
                     'Cannot persist query. Missing environment variable `' +
-                      envVar +
-                      '`.',
+                    envVar +
+                    '`.',
                   );
                 }
               }
@@ -99,7 +99,7 @@ async function persistQuery(queryText) {
       {
         hostname: 'serve.onegraph.com',
         port: 443,
-        path: '/graphql?app_id=0b066ba6-ed39-4db8-a497-ba0be34d5b2a',
+        path: `/graphql?app_id=${process.env.RAZZLE_ONEGRAPH_APP_ID}`,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

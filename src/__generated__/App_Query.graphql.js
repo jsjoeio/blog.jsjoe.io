@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash b4441fce35f3b0c6a3bc864da9a6c30e
+ * @relayHash a85cf1134853481dc19b2614309b017b
  */
 
 /* eslint-disable */
@@ -28,7 +28,7 @@ export type App_Query = {|
 /*
 query App_Query @persistedQueryConfiguration(accessToken: {environmentVariable: "OG_GITHUB_TOKEN"}) {
   gitHub {
-    repository(name: "onegraph-changelog", owner: "onegraph") {
+    repository(name: "blog.jsjoe.io", owner: "jsjoeio") {
       ...Posts_repository
       id
     }
@@ -90,12 +90,12 @@ var v0 = [
   {
     "kind": "Literal",
     "name": "name",
-    "value": "onegraph-changelog"
+    "value": "blog.jsjoe.io"
   },
   {
     "kind": "Literal",
     "name": "owner",
-    "value": "onegraph"
+    "value": "jsjoeio"
   }
 ],
 v1 = {
@@ -164,7 +164,7 @@ return {
             "kind": "LinkedField",
             "alias": null,
             "name": "repository",
-            "storageKey": "repository(name:\"onegraph-changelog\",owner:\"onegraph\")",
+            "storageKey": "repository(name:\"blog.jsjoe.io\",owner:\"jsjoeio\")",
             "args": (v0/*: any*/),
             "concreteType": "GitHubRepository",
             "plural": false,
@@ -198,7 +198,7 @@ return {
             "kind": "LinkedField",
             "alias": null,
             "name": "repository",
-            "storageKey": "repository(name:\"onegraph-changelog\",owner:\"onegraph\")",
+            "storageKey": "repository(name:\"blog.jsjoe.io\",owner:\"jsjoeio\")",
             "args": (v0/*: any*/),
             "concreteType": "GitHubRepository",
             "plural": false,
@@ -448,12 +448,12 @@ return {
   "params": {
     "operationKind": "query",
     "name": "App_Query",
-    "id": "dcecd768-617f-441a-a43e-fcc00261d273",
+    "id": "0bf0016e-8b0c-482f-931b-3a84f489ddec",
     "text": null,
     "metadata": {}
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '7ac1726fab688549694763c5adcf0979';
+(node/*: any*/).hash = '36c61796b57889565b7382586d422830';
 module.exports = node;
