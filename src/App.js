@@ -12,7 +12,6 @@ import {Route, Switch} from 'react-router-dom';
 import Link from './PreloadLink';
 import idx from 'idx';
 import {NotificationContainer} from './Notifications';
-import OneGraphLogo from './oneGraphLogo';
 import {Grommet, Grid, Box, Heading, Text, Anchor} from 'grommet';
 import {StatusCritical} from 'grommet-icons';
 import ScrollMemory from 'react-router-scroll-memory';
@@ -225,15 +224,14 @@ export default class App extends React.Component<
                 pad={{horizontal: 'medium', vertical: 'medium'}}
                 wrap={true}>
                 <Box align="center" direction="row">
-                  <OneGraphLogo width="96px" height="96px" />{' '}
                   <Heading level={2}>
                     <Link style={{color: 'inherit'}} to="/">
-                      OneGraph Product Updates
+                      JavaScript Joe's Blog
                     </Link>
                   </Heading>
                 </Box>
-                <Anchor href="https://onegraph.com">
-                  <Text size="small">Learn more about OneGraph</Text>
+                <Anchor href="https://jsjoe.io">
+                  <Text size="small">jsjoeio.io</Text>
                 </Anchor>
               </Box>
               <Box gridArea="main">

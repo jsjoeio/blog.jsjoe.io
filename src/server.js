@@ -31,12 +31,12 @@ function buildHtml({markup, styleTags, bootstrapData, basePath}) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta charset="utf-8" />
     <link rel="shortcut icon" href="/favicon.ico" />
-    <link rel="alternate" type="application/rss+xml" 
-          title="RSS Feed" 
+    <link rel="alternate" type="application/rss+xml"
+          title="RSS Feed"
           href="${basePath ? basePath : ''}/feed.rss" />
-    <link rel="alternate" 
-          href="${basePath ? basePath : ''}/feed.atom" 
-          title="Atom feed" 
+    <link rel="alternate"
+          href="${basePath ? basePath : ''}/feed.atom"
+          title="Atom feed"
           type="application/atom+xml" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -47,7 +47,7 @@ function buildHtml({markup, styleTags, bootstrapData, basePath}) {
     />
     <link rel="manifest" href="/manifest.json" />
 
-    <title>OneGraph Product Updates</title>
+    <title>Blog | JavaScript Joe</title>
     ${styleTags ? styleTags : ''}
     ${
       assets.client.css
