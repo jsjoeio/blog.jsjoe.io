@@ -116,7 +116,7 @@ export default createPaginationContainer(
           accessToken: {environmentVariable: "OG_GITHUB_TOKEN"}
         ) {
         gitHub {
-          repository(name: "onegraph-changelog", owner: "onegraph") {
+          repository(name: "blog.jsjoe.io", owner: "jsjoeio") {
             __typename
             ...Posts_repository
               @arguments(count: $count, cursor: $cursor, orderBy: $orderBy)

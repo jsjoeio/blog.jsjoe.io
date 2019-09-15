@@ -14,7 +14,7 @@ const feedQuery = graphql`
       accessToken: {environmentVariable: "OG_GITHUB_TOKEN"}
     ) {
     gitHub {
-      repository(name: "onegraph-changelog", owner: "onegraph") {
+      repository(name: "blog.jsjoe.io", owner: "jsjoeio") {
         issues(
           first: 20
           orderBy: {direction: DESC, field: CREATED_AT}

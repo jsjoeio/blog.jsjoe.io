@@ -3,25 +3,25 @@
 import React from 'react';
 import './App.css';
 import graphql from 'babel-plugin-relay/macro';
-import { QueryRenderer, fetchQuery } from 'react-relay';
+import {QueryRenderer, fetchQuery} from 'react-relay';
 import Posts from './Posts';
 import Post from './Post';
 import Comments from './Comments';
-import { onegraphAuth } from './Environment';
-import { Route, Switch } from 'react-router-dom';
+import {onegraphAuth} from './Environment';
+import {Route, Switch} from 'react-router-dom';
 import Link from './PreloadLink';
 import idx from 'idx';
-import { NotificationContainer } from './Notifications';
+import {NotificationContainer} from './Notifications';
 import OneGraphLogo from './oneGraphLogo';
-import { Grommet, Grid, Box, Heading, Text, Anchor } from 'grommet';
-import { StatusCritical } from 'grommet-icons';
+import {Grommet, Grid, Box, Heading, Text, Anchor} from 'grommet';
+import {StatusCritical} from 'grommet-icons';
 import ScrollMemory from 'react-router-scroll-memory';
-import { matchPath } from 'react-router-dom';
+import {matchPath} from 'react-router-dom';
 import UserContext from './UserContext';
 
-import type { App_ViewerQueryResponse } from './__generated__/App_Query.graphql';
-import type { Environment } from 'relay-runtime';
-import type { RelayNetworkError } from 'react-relay';
+import type {App_ViewerQueryResponse} from './__generated__/App_Query.graphql';
+import type {Environment} from 'relay-runtime';
+import type {RelayNetworkError} from 'react-relay';
 
 const theme = {
   name: 'onegraph',
@@ -56,7 +56,7 @@ const postsRootQuery = graphql`
   }
 `;
 
-const ErrorBox = ({ error }: { error: Error }) => {
+const ErrorBox = ({error}: {error: Error}) => {
   // $FlowFixMe
   const relayError = idx(error, _ => _.source.errors[0].message);
   return (
@@ -94,7 +94,7 @@ export const postRootQuery = graphql`
       accessToken: {environmentVariable: "OG_GITHUB_TOKEN"}
     ) {
     gitHub {
-      repository(name: "onegraph-changelog", owner: "onegraph") {
+      repository(name: "blog.jsjoe.io", owner: "jsjoeio") {
         issue(number: $issueNumber) {
           labels(first: 100) {
             nodes {
@@ -137,7 +137,7 @@ const PostRoot = ({
   }
 };
 
-const RenderRoute = ({ routeConfig, environment, match }) => (
+const RenderRoute = ({routeConfig, environment, match}) => (
   <QueryRenderer
     dataFrom="STORE_THEN_NETWORK"
     fetchPolicy="store-and-network"
@@ -170,16 +170,16 @@ export const routes = [
 ];
 
 export default class App extends React.Component<
-  { environment: Environment },
-  { isLoggedIn: boolean },
-  > {
+  {environment: Environment},
+  {isLoggedIn: boolean},
+> {
   state = {
     isLoggedIn: false,
   };
   componentDidMount() {
     onegraphAuth
       .isLoggedIn('github')
-      .then(isLoggedIn => this.setState({ isLoggedIn }));
+      .then(isLoggedIn => this.setState({isLoggedIn}));
   }
   _login = () => {
     onegraphAuth
@@ -187,7 +187,7 @@ export default class App extends React.Component<
       .then(() =>
         onegraphAuth
           .isLoggedIn('github')
-          .then(isLoggedIn => this.setState({ isLoggedIn })),
+          .then(isLoggedIn => this.setState({isLoggedIn})),
       );
   };
   _logout = () => {
@@ -196,7 +196,7 @@ export default class App extends React.Component<
       .then(() =>
         onegraphAuth
           .isLoggedIn('github')
-          .then(isLoggedIn => this.setState({ isLoggedIn })),
+          .then(isLoggedIn => this.setState({isLoggedIn})),
       );
   };
   render() {
@@ -214,20 +214,20 @@ export default class App extends React.Component<
               rows={['auto', 'flex']}
               columns={['flex']}
               areas={[
-                { name: 'header', start: [0, 0], end: [1, 0] },
-                { name: 'main', start: [0, 1], end: [1, 1] },
+                {name: 'header', start: [0, 0], end: [1, 0]},
+                {name: 'main', start: [0, 1], end: [1, 1]},
               ]}>
               <Box
                 gridArea="header"
                 direction="row"
                 align="center"
                 justify="between"
-                pad={{ horizontal: 'medium', vertical: 'medium' }}
+                pad={{horizontal: 'medium', vertical: 'medium'}}
                 wrap={true}>
                 <Box align="center" direction="row">
                   <OneGraphLogo width="96px" height="96px" />{' '}
                   <Heading level={2}>
-                    <Link style={{ color: 'inherit' }} to="/">
+                    <Link style={{color: 'inherit'}} to="/">
                       OneGraph Product Updates
                     </Link>
                   </Heading>
