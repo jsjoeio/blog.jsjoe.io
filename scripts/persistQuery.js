@@ -10,6 +10,7 @@ const PERSIST_QUERY_MUTATION = `
     $appId: String!
     $accessToken: String
     $query: String!
+    $fixedVariables: JSON
   ) {
     oneGraph {
       createPersistedQuery(
@@ -19,6 +20,7 @@ const PERSIST_QUERY_MUTATION = `
           appId: $appId
           cacheStrategy: { timeToLiveSeconds: 300 }
           freeVariables: $freeVariables
+          fixedVariables: $fixedVariables
         }
       ) {
         persistedQuery {
@@ -33,14 +35,9 @@ async function persistQuery(queryText) {
   const ast = parse(queryText, {noLocation: true});
 
   const freeVariables = new Set([]);
-  let accessToken;
+  let accessToken = null;
+  let fixedVariables = null;
   let transformedAst = GraphQLLanguage.visit(ast, {
-    Variable: {
-      enter(node) {
-        freeVariables.add(node.name.value);
-        return node;
-      },
-    },
     OperationDefinition: {
       enter(node) {
         for (const directive of node.directives) {
@@ -48,6 +45,13 @@ async function persistQuery(queryText) {
             const accessTokenArg = directive.arguments.find(
               a => a.name.value === 'accessToken',
             );
+            const fixedVariablesArg = directive.arguments.find(
+              a => a.name.value === 'fixedVariables',
+            );
+            const freeVariablesArg = directive.arguments.find(
+              a => a.name.value === 'freeVariables',
+            );
+
             if (accessTokenArg) {
               const envArg = accessTokenArg.value.fields.find(
                 f => f.name.value === 'environmentVariable',
@@ -70,6 +74,35 @@ async function persistQuery(queryText) {
                 }
               }
             }
+
+            if (fixedVariablesArg) {
+              const envArg = fixedVariablesArg.value.fields.find(
+                f => f.name.value === 'environmentVariable',
+              );
+              if (envArg) {
+                if (fixedVariables) {
+                  throw new Error(
+                    'fixedVariables are already defined for operation=' +
+                      node.name.value,
+                  );
+                }
+                const envVar = envArg.value.value;
+                fixedVariables = JSON.parse(process.env[envVar]);
+                if (!fixedVariables) {
+                  throw new Error(
+                    'Cannot persist query. Missing environment variable `' +
+                      envVar +
+                      '`.',
+                  );
+                }
+              }
+            }
+
+            if (freeVariablesArg) {
+              for (const v of freeVariablesArg.value.values) {
+                freeVariables.add(v.value);
+              }
+            }
           }
         }
         return {
@@ -84,9 +117,11 @@ async function persistQuery(queryText) {
 
   const variables = {
     query: print(transformedAst),
+    // This is your app's app id, edit `/.env` to change it
     appId: process.env.RAZZLE_ONEGRAPH_APP_ID,
     accessToken: accessToken || null,
     freeVariables: [...freeVariables],
+    fixedVariables: fixedVariables,
   };
 
   const body = JSON.stringify({
@@ -99,7 +134,11 @@ async function persistQuery(queryText) {
       {
         hostname: 'serve.onegraph.com',
         port: 443,
-        path: `/graphql?app_id=0b066ba6-ed39-4db8-a497-ba0be34d5b2a`,
+        // This is onedash's app id. If you followed the instructions in the
+        // README to create the `OG_DASHBOARD_ACCESS_TOKEN`, then this is the
+        // app id associated with the token that lets you persist queries.
+        // Don't change this to your app id.
+        path: '/graphql?app_id=0b066ba6-ed39-4db8-a497-ba0be34d5b2a',
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

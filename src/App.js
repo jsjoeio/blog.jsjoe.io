@@ -43,12 +43,14 @@ const theme = {
 };
 
 const postsRootQuery = graphql`
-  query App_Query
+  # repoName and repoOwner provided by fixedVariables
+  query App_Query($repoName: String!, $repoOwner: String!)
     @persistedQueryConfiguration(
       accessToken: {environmentVariable: "OG_GITHUB_TOKEN"}
+      fixedVariables: {environmentVariable: "REPOSITORY_FIXED_VARIABLES"}
     ) {
     gitHub {
-      repository(name: "blog.jsjoe.io", owner: "jsjoeio") {
+      repository(name: $repoName, owner: $repoOwner) {
         ...Posts_repository
       }
     }
@@ -88,12 +90,19 @@ const PostsRoot = ({
 };
 
 export const postRootQuery = graphql`
-  query App_Post_Query($issueNumber: Int!)
+  # repoName and repoOwner provided by fixedVariables
+  query App_Post_Query(
+    $issueNumber: Int!
+    $repoName: String!
+    $repoOwner: String!
+  )
     @persistedQueryConfiguration(
       accessToken: {environmentVariable: "OG_GITHUB_TOKEN"}
+      fixedVariables: {environmentVariable: "REPOSITORY_FIXED_VARIABLES"}
+      freeVariables: ["issueNumber"]
     ) {
     gitHub {
-      repository(name: "blog.jsjoe.io", owner: "jsjoeio") {
+      repository(name: $repoName, owner: $repoOwner) {
         issue(number: $issueNumber) {
           labels(first: 100) {
             nodes {
@@ -124,7 +133,7 @@ const PostRoot = ({
   }
   const post = idx(props, _ => _.gitHub.repository.issue);
   const labels = idx(post, _ => _.labels.nodes) || [];
-  if (!post || !labels.map(l => l.name).includes('publish')) {
+  if (!post || !labels.map(l => l.name.toLowerCase()).includes('publish')) {
     return <ErrorBox error={new Error('Missing post.')} />;
   } else {
     return (
@@ -157,7 +166,7 @@ export const routes = [
     component: PostsRoot,
   },
   {
-    path: '/post/:issueNumber',
+    path: '/post/:issueNumber/:slug?',
     exact: true,
     strict: false,
     query: postRootQuery,

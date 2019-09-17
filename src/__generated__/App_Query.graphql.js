@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash a85cf1134853481dc19b2614309b017b
+ * @relayHash 7e9bb4586a658bde383cc41381efed47
  */
 
 /* eslint-disable */
@@ -10,7 +10,10 @@
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
 type Posts_repository$ref = any;
-export type App_QueryVariables = {||};
+export type App_QueryVariables = {|
+  repoName: string,
+  repoOwner: string,
+|};
 export type App_QueryResponse = {|
   +gitHub: ?{|
     +repository: ?{|
@@ -26,9 +29,12 @@ export type App_Query = {|
 
 
 /*
-query App_Query @persistedQueryConfiguration(accessToken: {environmentVariable: "OG_GITHUB_TOKEN"}) {
+query App_Query(
+  $repoName: String!
+  $repoOwner: String!
+) @persistedQueryConfiguration(accessToken: {environmentVariable: "OG_GITHUB_TOKEN"}, fixedVariables: {environmentVariable: "REPOSITORY_FIXED_VARIABLES"}) {
   gitHub {
-    repository(name: "blog.jsjoe.io", owner: "jsjoeio") {
+    repository(name: $repoName, owner: $repoOwner) {
       ...Posts_repository
       id
     }
@@ -36,7 +42,7 @@ query App_Query @persistedQueryConfiguration(accessToken: {environmentVariable: 
 }
 
 fragment Posts_repository on GitHubRepository {
-  issues(first: 10, orderBy: {direction: DESC, field: CREATED_AT}, labels: ["publish"]) {
+  issues(first: 10, orderBy: {direction: DESC, field: CREATED_AT}, labels: ["publish", "Publish"]) {
     edges {
       node {
         id
@@ -82,34 +88,59 @@ fragment Post_post on GitHubIssue {
   commentsCount: comments {
     totalCount
   }
+  repository {
+    name
+    owner {
+      __typename
+      login
+      avatarUrl(size: 192)
+      id
+    }
+    id
+  }
 }
 */
 
 const node/*: ConcreteRequest*/ = (function(){
 var v0 = [
   {
-    "kind": "Literal",
-    "name": "name",
-    "value": "blog.jsjoe.io"
+    "kind": "LocalArgument",
+    "name": "repoName",
+    "type": "String!",
+    "defaultValue": null
   },
   {
-    "kind": "Literal",
-    "name": "owner",
-    "value": "jsjoeio"
+    "kind": "LocalArgument",
+    "name": "repoOwner",
+    "type": "String!",
+    "defaultValue": null
   }
 ],
-v1 = {
+v1 = [
+  {
+    "kind": "Variable",
+    "name": "name",
+    "variableName": "repoName"
+  },
+  {
+    "kind": "Variable",
+    "name": "owner",
+    "variableName": "repoOwner"
+  }
+],
+v2 = {
   "kind": "Literal",
   "name": "first",
   "value": 10
 },
-v2 = [
-  (v1/*: any*/),
+v3 = [
+  (v2/*: any*/),
   {
     "kind": "Literal",
     "name": "labels",
     "value": [
-      "publish"
+      "publish",
+      "Publish"
     ]
   },
   {
@@ -121,24 +152,38 @@ v2 = [
     }
   }
 ],
-v3 = {
+v4 = {
   "kind": "ScalarField",
   "alias": null,
   "name": "id",
   "args": null,
   "storageKey": null
 },
-v4 = {
+v5 = {
+  "kind": "ScalarField",
+  "alias": null,
+  "name": "name",
+  "args": null,
+  "storageKey": null
+},
+v6 = {
   "kind": "ScalarField",
   "alias": null,
   "name": "login",
   "args": null,
   "storageKey": null
 },
-v5 = {
+v7 = {
   "kind": "ScalarField",
   "alias": null,
   "name": "totalCount",
+  "args": null,
+  "storageKey": null
+},
+v8 = {
+  "kind": "ScalarField",
+  "alias": null,
+  "name": "__typename",
   "args": null,
   "storageKey": null
 };
@@ -149,7 +194,7 @@ return {
     "name": "App_Query",
     "type": "Query",
     "metadata": null,
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "selections": [
       {
         "kind": "LinkedField",
@@ -164,8 +209,8 @@ return {
             "kind": "LinkedField",
             "alias": null,
             "name": "repository",
-            "storageKey": "repository(name:\"blog.jsjoe.io\",owner:\"jsjoeio\")",
-            "args": (v0/*: any*/),
+            "storageKey": null,
+            "args": (v1/*: any*/),
             "concreteType": "GitHubRepository",
             "plural": false,
             "selections": [
@@ -183,7 +228,7 @@ return {
   "operation": {
     "kind": "Operation",
     "name": "App_Query",
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "selections": [
       {
         "kind": "LinkedField",
@@ -198,8 +243,8 @@ return {
             "kind": "LinkedField",
             "alias": null,
             "name": "repository",
-            "storageKey": "repository(name:\"blog.jsjoe.io\",owner:\"jsjoeio\")",
-            "args": (v0/*: any*/),
+            "storageKey": null,
+            "args": (v1/*: any*/),
             "concreteType": "GitHubRepository",
             "plural": false,
             "selections": [
@@ -207,8 +252,8 @@ return {
                 "kind": "LinkedField",
                 "alias": null,
                 "name": "issues",
-                "storageKey": "issues(first:10,labels:[\"publish\"],orderBy:{\"direction\":\"DESC\",\"field\":\"CREATED_AT\"})",
-                "args": (v2/*: any*/),
+                "storageKey": "issues(first:10,labels:[\"publish\",\"Publish\"],orderBy:{\"direction\":\"DESC\",\"field\":\"CREATED_AT\"})",
+                "args": (v3/*: any*/),
                 "concreteType": "GitHubIssueConnection",
                 "plural": false,
                 "selections": [
@@ -230,7 +275,7 @@ return {
                         "concreteType": "GitHubIssue",
                         "plural": false,
                         "selections": [
-                          (v3/*: any*/),
+                          (v4/*: any*/),
                           {
                             "kind": "ScalarField",
                             "alias": null,
@@ -272,7 +317,7 @@ return {
                             "name": "assignees",
                             "storageKey": "assignees(first:10)",
                             "args": [
-                              (v1/*: any*/)
+                              (v2/*: any*/)
                             ],
                             "concreteType": "GitHubUserConnection",
                             "plural": false,
@@ -286,15 +331,9 @@ return {
                                 "concreteType": "GitHubUser",
                                 "plural": true,
                                 "selections": [
-                                  (v3/*: any*/),
-                                  {
-                                    "kind": "ScalarField",
-                                    "alias": null,
-                                    "name": "name",
-                                    "args": null,
-                                    "storageKey": null
-                                  },
                                   (v4/*: any*/),
+                                  (v5/*: any*/),
+                                  (v6/*: any*/),
                                   {
                                     "kind": "ScalarField",
                                     "alias": null,
@@ -351,7 +390,7 @@ return {
                                 "concreteType": "GitHubReactingUserConnection",
                                 "plural": false,
                                 "selections": [
-                                  (v5/*: any*/),
+                                  (v7/*: any*/),
                                   {
                                     "kind": "LinkedField",
                                     "alias": null,
@@ -361,8 +400,8 @@ return {
                                     "concreteType": "GitHubUser",
                                     "plural": true,
                                     "selections": [
-                                      (v4/*: any*/),
-                                      (v3/*: any*/)
+                                      (v6/*: any*/),
+                                      (v4/*: any*/)
                                     ]
                                   }
                                 ]
@@ -378,16 +417,50 @@ return {
                             "concreteType": "GitHubIssueCommentConnection",
                             "plural": false,
                             "selections": [
-                              (v5/*: any*/)
+                              (v7/*: any*/)
                             ]
                           },
                           {
-                            "kind": "ScalarField",
+                            "kind": "LinkedField",
                             "alias": null,
-                            "name": "__typename",
+                            "name": "repository",
+                            "storageKey": null,
                             "args": null,
-                            "storageKey": null
-                          }
+                            "concreteType": "GitHubRepository",
+                            "plural": false,
+                            "selections": [
+                              (v5/*: any*/),
+                              {
+                                "kind": "LinkedField",
+                                "alias": null,
+                                "name": "owner",
+                                "storageKey": null,
+                                "args": null,
+                                "concreteType": null,
+                                "plural": false,
+                                "selections": [
+                                  (v8/*: any*/),
+                                  (v6/*: any*/),
+                                  {
+                                    "kind": "ScalarField",
+                                    "alias": null,
+                                    "name": "avatarUrl",
+                                    "args": [
+                                      {
+                                        "kind": "Literal",
+                                        "name": "size",
+                                        "value": 192
+                                      }
+                                    ],
+                                    "storageKey": "avatarUrl(size:192)"
+                                  },
+                                  (v4/*: any*/)
+                                ]
+                              },
+                              (v4/*: any*/)
+                            ]
+                          },
+                          (v8/*: any*/)
                         ]
                       },
                       {
@@ -430,7 +503,7 @@ return {
                 "kind": "LinkedHandle",
                 "alias": null,
                 "name": "issues",
-                "args": (v2/*: any*/),
+                "args": (v3/*: any*/),
                 "handle": "connection",
                 "key": "Posts_posts_issues",
                 "filters": [
@@ -438,7 +511,7 @@ return {
                   "labels"
                 ]
               },
-              (v3/*: any*/)
+              (v4/*: any*/)
             ]
           }
         ]
@@ -448,12 +521,12 @@ return {
   "params": {
     "operationKind": "query",
     "name": "App_Query",
-    "id": "de097fdd-82b7-4687-b018-5d49cec9ac27",
+    "id": "90b67c51-fb51-4812-a413-2a796f28fe40",
     "text": null,
     "metadata": {}
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '36c61796b57889565b7382586d422830';
+(node/*: any*/).hash = 'f9d409138fbdc489c0a66f8825038a59';
 module.exports = node;

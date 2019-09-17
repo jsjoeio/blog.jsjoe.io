@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash aac2044fee8360f270d304d61b01eb91
+ * @relayHash bc1d71e0daf673e98f2a66b118c4cc53
  */
 
 /* eslint-disable */
@@ -14,6 +14,8 @@ export type CommentsPaginationQueryVariables = {|
   count: number,
   cursor?: ?string,
   issueNumber: number,
+  repoName: string,
+  repoOwner: string,
 |};
 export type CommentsPaginationQueryResponse = {|
   +gitHub: ?{|
@@ -37,9 +39,11 @@ query CommentsPaginationQuery(
   $count: Int!
   $cursor: String
   $issueNumber: Int!
-) @persistedQueryConfiguration(accessToken: {environmentVariable: "OG_GITHUB_TOKEN"}) {
+  $repoName: String!
+  $repoOwner: String!
+) @persistedQueryConfiguration(accessToken: {environmentVariable: "OG_GITHUB_TOKEN"}, freeVariables: ["count", "cursor", "issueNumber"], fixedVariables: {environmentVariable: "REPOSITORY_FIXED_VARIABLES"}) {
   gitHub {
-    repository(name: "blog.jsjoe.io", owner: "jsjoeio") {
+    repository(name: $repoName, owner: $repoOwner) {
       __typename
       issue(number: $issueNumber) {
         ...Comments_post_1G22uz
@@ -133,18 +137,30 @@ var v0 = [
     "name": "issueNumber",
     "type": "Int!",
     "defaultValue": null
+  },
+  {
+    "kind": "LocalArgument",
+    "name": "repoName",
+    "type": "String!",
+    "defaultValue": null
+  },
+  {
+    "kind": "LocalArgument",
+    "name": "repoOwner",
+    "type": "String!",
+    "defaultValue": null
   }
 ],
 v1 = [
   {
-    "kind": "Literal",
+    "kind": "Variable",
     "name": "name",
-    "value": "blog.jsjoe.io"
+    "variableName": "repoName"
   },
   {
-    "kind": "Literal",
+    "kind": "Variable",
     "name": "owner",
-    "value": "jsjoeio"
+    "variableName": "repoOwner"
   }
 ],
 v2 = {
@@ -236,7 +252,7 @@ return {
             "kind": "LinkedField",
             "alias": null,
             "name": "repository",
-            "storageKey": "repository(name:\"blog.jsjoe.io\",owner:\"jsjoeio\")",
+            "storageKey": null,
             "args": (v1/*: any*/),
             "concreteType": "GitHubRepository",
             "plural": false,
@@ -293,7 +309,7 @@ return {
             "kind": "LinkedField",
             "alias": null,
             "name": "repository",
-            "storageKey": "repository(name:\"blog.jsjoe.io\",owner:\"jsjoeio\")",
+            "storageKey": null,
             "args": (v1/*: any*/),
             "concreteType": "GitHubRepository",
             "plural": false,
@@ -521,12 +537,12 @@ return {
   "params": {
     "operationKind": "query",
     "name": "CommentsPaginationQuery",
-    "id": "97364627-3b46-4d80-aa47-0e5ff83e48c8",
+    "id": "298c6715-e528-4c94-925e-19014c623bda",
     "text": null,
     "metadata": {}
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = 'e9c6803419832457e8e7c0e6a06e5106';
+(node/*: any*/).hash = '0e9335722b2c22d7a2c06b16c1aef43b';
 module.exports = node;

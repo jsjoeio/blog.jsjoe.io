@@ -41,7 +41,7 @@
     "fetch-schema": "node scripts/fetchSchema.js --path schema.graphql",
     "analyze": "source-map-explorer 'build/public/static/js/*.js'",
     "build:netlify-functions": "NODE_ENV=development netlify-lambda build netlify-functions",
-    "deploy:netlify": "netlify deploy",
+    "deploy:netlify": "yarn build && yarn build:netlify-functions && netlify deploy",
     "netlify:serve": "NODE_ENV=development netlify-lambda serve netlify-functions",
     "prettier": "prettier --write \"src/**/*.js\" README.md"
   },

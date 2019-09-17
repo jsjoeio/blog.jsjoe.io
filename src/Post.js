@@ -24,8 +24,12 @@ import {lowerCase, sentenceCase} from 'change-case';
 
 import type {Post_post} from './__generated__/Post_post.graphql';
 
+// n.b. no accessToken in the persistedQueryConfiguration for these mutations,
+// because we want to add reactions on behalf of the logged-in user, not the
+// persisted auth
 const addReactionMutation = graphql`
-  mutation Post_AddReactionMutation($input: GitHubAddReactionInput!) {
+  mutation Post_AddReactionMutation($input: GitHubAddReactionInput!)
+    @persistedQueryConfiguration(freeVariables: ["input"]) {
     gitHub {
       addReaction(input: $input) {
         reaction {
@@ -40,7 +44,8 @@ const addReactionMutation = graphql`
 `;
 
 const removeReactionMutation = graphql`
-  mutation Post_RemoveReactionMutation($input: GitHubRemoveReactionInput!) {
+  mutation Post_RemoveReactionMutation($input: GitHubRemoveReactionInput!)
+    @persistedQueryConfiguration(freeVariables: ["input"]) {
     gitHub {
       removeReaction(input: $input) {
         reaction {
@@ -339,6 +344,26 @@ export const ReactionBar = ({
   );
 };
 
+function slugify(s: string): string {
+  return lowerCase(s).replace(/[^A-Za-z0-9-]+/g, '-');
+}
+
+export function postUrl({
+  post,
+  viewComments,
+}: {
+  post: {
+    +number: number,
+    +repository: {+owner: {+login: string}, +name: string},
+    +title: string,
+  },
+  viewComments?: boolean,
+}) {
+  return `/post/${post.number}/${slugify(post.title)}${
+    viewComments ? '#comments' : ''
+  }`;
+}
+
 const Post = ({relay, post}: Props) => {
   const {error: notifyError} = React.useContext(NotificationContext);
   const [showReactionPopover, setShowReactionPopover] = React.useState(false);
@@ -355,7 +380,7 @@ const Post = ({relay, post}: Props) => {
         <Heading level={3} margin="none">
           <Link
             style={{color: 'inherit'}}
-            to={`/post/${post.number}`}
+            to={postUrl({post})}
             onMouseOver={() =>
               fetchQuery(relay.environment, postRootQuery, {
                 issueNumber: post.number,
@@ -370,7 +395,7 @@ const Post = ({relay, post}: Props) => {
             {formatDate(new Date(post.createdAt), 'MMM do, yyyy')}
           </Text>
           <Text size="xsmall">
-            <Link to={`/post/${post.number}#comments`}>view comments</Link>
+            <Link to={postUrl({post, viewComments: true})}>view comments</Link>
           </Text>
         </Box>
         <Text size="small">
@@ -443,6 +468,13 @@ export default createFragmentContainer(Post, {
       }
       commentsCount: comments {
         totalCount
+      }
+      repository {
+        name
+        owner {
+          login
+          avatarUrl(size: 192)
+        }
       }
     }
   `,

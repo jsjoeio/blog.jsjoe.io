@@ -81,7 +81,7 @@ export default createPaginationContainer(
           first: $count
           after: $cursor
           orderBy: $orderBy
-          labels: ["publish"]
+          labels: ["publish", "Publish"]
         ) @connection(key: "Posts_posts_issues") {
           edges {
             node {
@@ -107,16 +107,21 @@ export default createPaginationContainer(
     },
 
     query: graphql`
+      # repoName and repoOwner provided by fixedVariables
       query PostsPaginationQuery(
         $count: Int!
         $cursor: String
         $orderBy: GitHubIssueOrder
+        $repoOwner: String!
+        $repoName: String!
       )
         @persistedQueryConfiguration(
           accessToken: {environmentVariable: "OG_GITHUB_TOKEN"}
+          freeVariables: ["count", "cursor", "orderBy"]
+          fixedVariables: {environmentVariable: "REPOSITORY_FIXED_VARIABLES"}
         ) {
         gitHub {
-          repository(name: "blog.jsjoe.io", owner: "jsjoeio") {
+          repository(name: $repoName, owner: $repoOwner) {
             __typename
             ...Posts_repository
               @arguments(count: $count, cursor: $cursor, orderBy: $orderBy)

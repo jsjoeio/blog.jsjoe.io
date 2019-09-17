@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 537b721ffe865b904b58db537705c2b6
+ * @relayHash 9965f06c309c5efe177c558b6111a942
  */
 
 /* eslint-disable */
@@ -40,7 +40,7 @@ export type Post_AddReactionMutation = {|
 /*
 mutation Post_AddReactionMutation(
   $input: GitHubAddReactionInput!
-) {
+) @persistedQueryConfiguration(freeVariables: ["input"]) {
   gitHub {
     addReaction(input: $input) {
       reaction {
@@ -208,12 +208,12 @@ return {
   "params": {
     "operationKind": "mutation",
     "name": "Post_AddReactionMutation",
-    "id": "24b8d3fd-e2e5-4ba8-a431-7e8b4df405c9",
+    "id": "73318781-4cc3-4701-b3c5-0c631bb35ab4",
     "text": null,
     "metadata": {}
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '5d62de9c17f536fef2453f920b4f27ec';
+(node/*: any*/).hash = '0cc7619ab8fe175e3ca6cfa083099198';
 module.exports = node;

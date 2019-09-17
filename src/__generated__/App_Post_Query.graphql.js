@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash ad236b9ba5ccee428fdfaa7870839d4e
+ * @relayHash 53d7b412b503bbfd7d0021cc48eaf02e
  */
 
 /* eslint-disable */
@@ -12,7 +12,9 @@ import type { ConcreteRequest } from 'relay-runtime';
 type Comments_post$ref = any;
 type Post_post$ref = any;
 export type App_Post_QueryVariables = {|
-  issueNumber: number
+  issueNumber: number,
+  repoName: string,
+  repoOwner: string,
 |};
 export type App_Post_QueryResponse = {|
   +gitHub: ?{|
@@ -39,9 +41,11 @@ export type App_Post_Query = {|
 /*
 query App_Post_Query(
   $issueNumber: Int!
-) @persistedQueryConfiguration(accessToken: {environmentVariable: "OG_GITHUB_TOKEN"}) {
+  $repoName: String!
+  $repoOwner: String!
+) @persistedQueryConfiguration(accessToken: {environmentVariable: "OG_GITHUB_TOKEN"}, fixedVariables: {environmentVariable: "REPOSITORY_FIXED_VARIABLES"}, freeVariables: ["issueNumber"]) {
   gitHub {
-    repository(name: "blog.jsjoe.io", owner: "jsjoeio") {
+    repository(name: $repoName, owner: $repoOwner) {
       issue(number: $issueNumber) {
         labels(first: 100) {
           nodes {
@@ -87,6 +91,16 @@ fragment Post_post on GitHubIssue {
   }
   commentsCount: comments {
     totalCount
+  }
+  repository {
+    name
+    owner {
+      __typename
+      login
+      avatarUrl(size: 192)
+      id
+    }
+    id
   }
 }
 
@@ -161,18 +175,30 @@ var v0 = [
     "name": "issueNumber",
     "type": "Int!",
     "defaultValue": null
+  },
+  {
+    "kind": "LocalArgument",
+    "name": "repoName",
+    "type": "String!",
+    "defaultValue": null
+  },
+  {
+    "kind": "LocalArgument",
+    "name": "repoOwner",
+    "type": "String!",
+    "defaultValue": null
   }
 ],
 v1 = [
   {
-    "kind": "Literal",
+    "kind": "Variable",
     "name": "name",
-    "value": "blog.jsjoe.io"
+    "variableName": "repoName"
   },
   {
-    "kind": "Literal",
+    "kind": "Variable",
     "name": "owner",
-    "value": "jsjoeio"
+    "variableName": "repoOwner"
   }
 ],
 v2 = [
@@ -337,7 +363,7 @@ return {
             "kind": "LinkedField",
             "alias": null,
             "name": "repository",
-            "storageKey": "repository(name:\"blog.jsjoe.io\",owner:\"jsjoeio\")",
+            "storageKey": null,
             "args": (v1/*: any*/),
             "concreteType": "GitHubRepository",
             "plural": false,
@@ -411,7 +437,7 @@ return {
             "kind": "LinkedField",
             "alias": null,
             "name": "repository",
-            "storageKey": "repository(name:\"blog.jsjoe.io\",owner:\"jsjoeio\")",
+            "storageKey": null,
             "args": (v1/*: any*/),
             "concreteType": "GitHubRepository",
             "plural": false,
@@ -517,6 +543,46 @@ return {
                     "plural": false,
                     "selections": [
                       (v11/*: any*/)
+                    ]
+                  },
+                  {
+                    "kind": "LinkedField",
+                    "alias": null,
+                    "name": "repository",
+                    "storageKey": null,
+                    "args": null,
+                    "concreteType": "GitHubRepository",
+                    "plural": false,
+                    "selections": [
+                      (v4/*: any*/),
+                      {
+                        "kind": "LinkedField",
+                        "alias": null,
+                        "name": "owner",
+                        "storageKey": null,
+                        "args": null,
+                        "concreteType": null,
+                        "plural": false,
+                        "selections": [
+                          (v13/*: any*/),
+                          (v8/*: any*/),
+                          {
+                            "kind": "ScalarField",
+                            "alias": null,
+                            "name": "avatarUrl",
+                            "args": [
+                              {
+                                "kind": "Literal",
+                                "name": "size",
+                                "value": 192
+                              }
+                            ],
+                            "storageKey": "avatarUrl(size:192)"
+                          },
+                          (v5/*: any*/)
+                        ]
+                      },
+                      (v5/*: any*/)
                     ]
                   },
                   {
@@ -658,12 +724,12 @@ return {
   "params": {
     "operationKind": "query",
     "name": "App_Post_Query",
-    "id": "c89d644c-7eb5-495d-8c2b-fe2168996317",
+    "id": "42463012-2cc1-46b4-90f5-f1f042c1be1c",
     "text": null,
     "metadata": {}
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = 'fe752c1750a9a7b44ce3ad213531ca72';
+(node/*: any*/).hash = 'e4e12bfd5778781b0ffc768ff7273360';
 module.exports = node;
