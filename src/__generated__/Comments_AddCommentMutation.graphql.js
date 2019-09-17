@@ -401,7 +401,7 @@ return {
   "params": {
     "operationKind": "mutation",
     "name": "Comments_AddCommentMutation",
-    "id": "769983ca-aeac-4545-97ac-2dcc412b8181",
+    "id": "3d380023-9a68-470d-b571-12b23e6d9652",
     "text": null,
     "metadata": {}
   }

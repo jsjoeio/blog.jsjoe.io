@@ -21,7 +21,7 @@ import {NotificationContext} from './Notifications';
 import {Box, Heading, Text} from 'grommet';
 import UserContext from './UserContext';
 import {lowerCase, sentenceCase} from 'change-case';
-
+import {slugify} from './slugify';
 import type {Post_post} from './__generated__/Post_post.graphql';
 
 // n.b. no accessToken in the persistedQueryConfiguration for these mutations,
@@ -344,7 +344,7 @@ export const ReactionBar = ({
   );
 };
 
-function slugify(s: string): string {
+function slugify2(s: string): string {
   return lowerCase(s).replace(/[^A-Za-z0-9-]+/g, '-');
 }
 

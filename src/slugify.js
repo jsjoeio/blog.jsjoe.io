@@ -8,8 +8,6 @@ export function slugify(string) {
     .replace(/\-\-+/g, '-') // Replace multiple - with single -
     .trimStart() // Trim - from start of text ES2019 feat
     .trimEnd(); // Trim - from end of text - ES2019 feat
-  // .replace(/^-+/, '') // Trim - from start of text
-  // .replace(/-+$/, ''); // Trim - from end of text
 }
 
 // Source:
