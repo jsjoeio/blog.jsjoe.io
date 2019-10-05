@@ -1,27 +1,27 @@
 // @flow
 
-import App, {routes} from './App';
+import App, { routes } from './App';
 import React from 'react';
-import {StaticRouter, matchPath} from 'react-router-dom';
-import {ServerStyleSheet} from 'styled-components';
+import { StaticRouter, matchPath } from 'react-router-dom';
+import { ServerStyleSheet } from 'styled-components';
 import express from 'express';
-import {renderToString} from 'react-dom/server';
-import {fetchQuery} from 'react-relay';
-import {createEnvironment} from './Environment';
+import { renderToString } from 'react-dom/server';
+import { fetchQuery } from 'react-relay';
+import { createEnvironment } from './Environment';
 import serialize from 'serialize-javascript';
-import {RecordSource} from 'relay-runtime';
+import { RecordSource } from 'relay-runtime';
 import RelayQueryResponseCache from './relayResponseCache';
-import {buildFeed} from './RssFeed';
+import { buildFeed } from './RssFeed';
 
 // $FlowFixMe
 const assets = require(process.env.RAZZLE_ASSETS_MANIFEST);
 
-function buildHtml({markup, styleTags, bootstrapData, basePath}) {
+function buildHtml({ markup, styleTags, bootstrapData, basePath }) {
   const bootstrapScript = bootstrapData
     ? `<script>
     window.__RELAY_BOOTSTRAP_DATA__ = JSON.parse(${serialize(
       JSON.stringify(bootstrapData),
-      {isJSON: true},
+      { isJSON: true },
     )})
   </script>`
     : '';
@@ -43,21 +43,21 @@ function buildHtml({markup, styleTags, bootstrapData, basePath}) {
     <meta name="theme-color" content="#000000" />
     <meta
       name="description"
-      content="Follow along with OneGraph as we take over the world with GraphQL."
+      content="The Blog of JavaScript Joe"
     />
     <link rel="manifest" href="/manifest.json" />
 
     <title>Blog | JavaScript Joe</title>
     ${styleTags ? styleTags : ''}
     ${
-      assets.client.css
-        ? `<link rel="stylesheet" href="${assets.client.css}">`
-        : ''
+    assets.client.css
+      ? `<link rel="stylesheet" href="${assets.client.css}">`
+      : ''
     }
     ${
-      process.env.NODE_ENV === 'production'
-        ? `<script src="${assets.client.js}" defer></script>`
-        : `<script src="${assets.client.js}" defer crossorigin></script>`
+    process.env.NODE_ENV === 'production'
+      ? `<script src="${assets.client.js}" defer></script>`
+      : `<script src="${assets.client.js}" defer crossorigin></script>`
     }
   </head>
   <body>
@@ -87,8 +87,8 @@ function createApp(basePath: ?string) {
         extension === 'rss'
           ? feed.rss2()
           : extension === 'atom'
-          ? feed.atom1()
-          : feed.json1();
+            ? feed.atom1()
+            : feed.json1();
       res.set('Cache-Control', 'public, max-age=300, s-maxage=300');
       res.set(
         'Content-Type',
